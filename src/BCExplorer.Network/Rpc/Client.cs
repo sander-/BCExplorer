@@ -102,20 +102,28 @@ namespace BCExplorer.Network.Rpc
             string s = JsonConvert.SerializeObject(json);
             byte[] byteArray = Encoding.UTF8.GetBytes(s);
 
-            using (Stream dataStream = await webRequest.GetRequestStreamAsync())
+            try
             {
-                dataStream.Write(byteArray, 0, byteArray.Length);
-            }
-
-            using (WebResponse webResponse = await webRequest.GetResponseAsync())
-            {
-                using (Stream str = webResponse.GetResponseStream())
+                using (Stream dataStream = await webRequest.GetRequestStreamAsync())
                 {
-                    using (StreamReader sr = new StreamReader(str))
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                }
+
+                using (WebResponse webResponse = await webRequest.GetResponseAsync())
+                {
+                    using (Stream str = webResponse.GetResponseStream())
                     {
-                        return await sr.ReadToEndAsync();
+                        using (StreamReader sr = new StreamReader(str))
+                        {
+                            return await sr.ReadToEndAsync();
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error getting data: {e.Message}");
+                throw;
             }
         }
     }

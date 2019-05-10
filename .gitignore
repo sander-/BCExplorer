@@ -16,6 +16,9 @@ network-config.json
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+#ignored folders
+*.ignore/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

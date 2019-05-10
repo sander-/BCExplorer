@@ -19,6 +19,10 @@ namespace BCExplorer.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddDebug();
+                })
                 .UseStartup<Startup>();
     }
 }

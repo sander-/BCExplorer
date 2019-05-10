@@ -9,5 +9,8 @@ namespace BCExplorer.Network.Rpc
     public interface IClient
     {
         Task<RawTransactionResult> GetRawTransactionAsync(string txid, int jsonResult = 1);
+        Task<string> GetBlockHashAsync(int blockNumber);
+        Task<BlockResult> GetBlockAsync(string hash);
+        Task<string> GetBestBlockHashAsync();
     }
 }

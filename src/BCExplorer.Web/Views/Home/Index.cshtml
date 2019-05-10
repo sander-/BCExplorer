@@ -1,8 +1,47 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IndexViewModel
+@{
+    ViewData["Title"] = "Block explorer";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col">
+        <div class="input-group input-group-lg search-for">
+            <input onkeydown="if (event.keyCode == 13) window.open('/search/' + document.getElementById('search_id').value, '_self')" type="text" id="search_id" class="form-control" placeholder="You may search a block height, block hash, tx hash or address.">
+            <span class="input-group-btn">
+                <button class="btn btn-dark btn-lg" type="button" onclick="window.open('/search/' + document.getElementById('search_id').value, '_self')">Go!</button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Current Block
+            </div>
+            <div class="card-body">
+                @Model.LastBlock.Height
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Difficulty
+            </div>
+            <div class="card-body">
+                @Model.LastBlock.Difficulty.ToString("F2")
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Time
+            </div>
+            <div class="card-body">
+                @Model.LastBlock.Time
+            </div>
+        </div>
+    </div>
 </div>

@@ -5,14 +5,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BCExplorer.Web.Models;
+using BCExplorer.Services;
 
 namespace BCExplorer.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IBlockService BlockService { get; set; }
+
+        public HomeController(IBlockService blockService)
         {
-            return View();
+            BlockService = blockService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            try
+            {
+                var lastBlock = await BlockService.GetLastBlock();
+                var vm = new IndexViewModel
+                {
+                    LastBlock = lastBlock,
+                };
+                return View(vm);
+            }
+            catch (Exception)
+            {
+                return View("_NotFound");
+            }
         }
 
         public IActionResult Privacy()

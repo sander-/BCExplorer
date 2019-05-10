@@ -36,7 +36,8 @@ namespace BCExplorer.Network.Response
         public string Chainwork { get; set; }
         [JsonProperty("Previousblockhash")]
         public string Previousblockhash { get; set; }
-
+        [JsonProperty("Nextblockhash")]
+        public string Nextblockhash { get; set; }
         public DateTime GetTime()
         {
             return Time.FromUnixDateTime();
