@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
   </ItemGroup>
 
