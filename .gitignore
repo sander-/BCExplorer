@@ -7,6 +7,9 @@
 *-secrets*.json
 network-config.json
 
+#deployment scripts
+*.yml
+
 # User-specific files
 *.suo
 *.user
