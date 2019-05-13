@@ -21,6 +21,13 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: AzureKeyVault@1
+  inputs:
+    azureSubscription: 'Visual Studio Enterprise(f28f1b22-f62f-46b8-8a31-e4c7edb54cae)'
+    KeyVaultName: 'grv-keyvault'
+    SecretsFilter: '*'
+
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
