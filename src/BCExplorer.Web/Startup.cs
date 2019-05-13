@@ -55,7 +55,7 @@ namespace BCExplorer.Web
             });
 
             services.AddResponseCaching();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetService<ILogger<Program>>();
