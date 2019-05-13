@@ -3,8 +3,12 @@ using BCExplorer.Network.Providers;
 using BCExplorer.Services.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using BCExplorer.Network.Response;
 
 namespace BCExplorer.Services
 {
@@ -12,6 +16,7 @@ namespace BCExplorer.Services
     {
         Task<Block> GetBlock(string id);
         Task<Block> GetLastBlock();
+        Task<List<Block>> GetLatestBlocks(int count);
     }
 
     public class BlockService : IBlockService
@@ -58,6 +63,40 @@ namespace BCExplorer.Services
             var blockhash = await BlockProvider.GetBestBlockHash();
             var block = await GetBlock(blockhash) ?? new Block { Hash = blockhash };
             return block;
+        }
+
+        public async Task<List<Block>> GetLatestBlocks(int count)
+        {
+            List<Block> latestBlocks = new List<Block>();
+            using (Model.BCExplorerContext context = new Model.BCExplorerContext())
+            {
+                var blocks = await context.Blocks.OrderByDescending(p => p.Id).Take(count).ToListAsync();
+                foreach (var block in blocks)
+                {
+                    var blockData = JsonConvert.DeserializeObject<RpcResult<BlockResult>>(block.BlockData);
+                    var b = new Block
+                    {
+                        Bits = blockData.Result.Bits,
+                        Chainwork = blockData.Result.Chainwork,
+                        Confirmations = blockData.Result.Confirmations,
+                        Difficulty = blockData.Result.Difficulty,
+                        Hash = blockData.Result.Hash,
+                        Height = blockData.Result.Height,
+                        MerkleRoot = blockData.Result.Merkleroot,
+                        NextBlock = blockData.Result.Nextblockhash,
+                        Nonce = blockData.Result.Nonce,
+                        PreviousBlock = blockData.Result.Previousblockhash,
+                        Size = blockData.Result.Size,
+                        Time = blockData.Result.GetTime(),
+                        Age = blockData.Result.GetAge(),
+                        TotalTransactions = blockData.Result.Transactions.Count,
+                        Version = (uint)blockData.Result.Version
+                    };
+
+                    latestBlocks.Add(b);
+                }
+            }
+            return latestBlocks;
         }
     }
 }

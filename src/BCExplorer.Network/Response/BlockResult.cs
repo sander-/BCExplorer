@@ -42,5 +42,9 @@ namespace BCExplorer.Network.Response
         {
             return Time.FromUnixDateTime();
         }
+        public TimeSpan GetAge()
+        {
+            return DateTime.Now.Subtract(GetTime());
+        }
     }
 }

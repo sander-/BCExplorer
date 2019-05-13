@@ -9,5 +9,7 @@ namespace BCExplorer.Web.Models
     public class IndexViewModel
     {
         public Block LastBlock { get; set; }
+
+        public List<Block> LatestBlocks { get; set; }
     }
 }

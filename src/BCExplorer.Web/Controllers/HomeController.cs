@@ -23,9 +23,11 @@ namespace BCExplorer.Web.Controllers
             try
             {
                 var lastBlock = await BlockService.GetLastBlock();
+                var latestBlocks = await BlockService.GetLatestBlocks(20);
                 var vm = new IndexViewModel
                 {
                     LastBlock = lastBlock,
+                    LatestBlocks = latestBlocks
                 };
                 return View(vm);
             }

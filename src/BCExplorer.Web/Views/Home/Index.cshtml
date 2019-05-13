@@ -45,3 +45,30 @@
         </div>
     </div>
 </div>
+
+<div class="row mt-3">
+    <h2>Latest 20 confirmed blocks</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Height</th>
+                <th>Age</th>
+                <th>Difficulty</th>
+                <th>Transactions</th>
+                <th>Hash</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var block in Model.LatestBlocks)
+            {
+                <tr>
+                    <td>@block.Height</td>
+                    <td>@Math.Floor(block.Age.TotalMinutes) minutes @block.Age.Seconds seconds</td>
+                    <td>@block.Difficulty.ToString("F2")</td>
+                    <td>@block.TotalTransactions</td>
+                    <td>@block.Hash</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

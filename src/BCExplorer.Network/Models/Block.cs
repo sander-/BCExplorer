@@ -25,5 +25,6 @@ namespace BCExplorer.Network.Models
         public int Size { get; set; }
         public int StrippedSize { get; set; }
         public uint Version { get; set; }
+        public TimeSpan Age { get; set; }
     }
 }
