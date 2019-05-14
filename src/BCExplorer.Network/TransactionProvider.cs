@@ -1,6 +1,8 @@
 ﻿using BCExplorer.Network.Models;
 using BCExplorer.Network.Providers;
 using BCExplorer.Network.Response;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NBitcoin.DataEncoders;
 using System;
 using System.Collections.Generic;
@@ -15,9 +17,9 @@ namespace BCExplorer.Network
         readonly Rpc.IClient _client;
         public const string NON_STANDARD = "nonstandard";
 
-        public TransactionProvider(Rpc.IClient client)
+        public TransactionProvider(IOptions<Rpc.RpcSettings> options, ILogger logger)
         {
-            _client = client;
+            _client = new Rpc.Client(options.Value, logger);
         }
 
         public async Task<Transaction> GetTransaction(string id)
@@ -108,7 +110,7 @@ namespace BCExplorer.Network
 
                     }
                     else
-                    {   
+                    {
                         vOut.Address = output.ScriptPubKey.Type;
                     }
                 }

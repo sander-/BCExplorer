@@ -36,7 +36,7 @@ namespace BCExplorer.Web
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -59,11 +59,15 @@ namespace BCExplorer.Web
 
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetService<ILogger<Program>>();
-            services.AddSingleton<ILogger>(logger); 
+            services.AddSingleton<ILogger>(logger);
 
             services.AddTransient<IBlockService, BlockService>();
             services.AddTransient<IBlockProvider, BlockProvider>();
             services.AddTransient<IBlockRepository, BlockRepository>();
+
+            services.AddTransient<ITransactionService, TransactionService>();
+            services.AddTransient<ITransactionProvider, TransactionProvider>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
 
         }
 

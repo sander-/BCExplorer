@@ -1,6 +1,6 @@
 ﻿@model IndexViewModel
 @{
-    ViewData["Title"] = "Block explorer";
+    ViewData["Title"] = "Gravium Block Explorer";
 }
 
 <div class="row">
@@ -47,19 +47,20 @@
 </div>
 
 <div class="row mt-3">
-    <h2>Latest 20 confirmed blocks</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Height</th>
-                <th>Age</th>
-                <th>Difficulty</th>
-                <th>Transactions</th>
-                <th>Hash</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var block in Model.LatestBlocks)
+    <div class="col">
+        <h2>Latest 20 confirmed blocks</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Height</th>
+                    <th>Age</th>
+                    <th>Difficulty</th>
+                    <th>Transactions</th>
+                    <th>Hash</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var block in Model.LatestBlocks)
             {
                 <tr>
                     <td>@block.Height</td>
@@ -69,6 +70,7 @@
                     <td>@block.Hash</td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>

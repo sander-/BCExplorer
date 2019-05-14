@@ -60,13 +60,15 @@ namespace BCExplorer.Indexer
             _transactionProvider = new TransactionProvider(_client);
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            _logger.Log(LogLevel.Information, "Indexer Starting...press ENTER to cancel.");
+            _logger.Log(LogLevel.Information, "Indexer Starting...press CTRL-C to cancel.");
 
-            Task.Run(() => Index(_cts.Token));
-
-            Console.ReadLine();
+            while(!_cts.Token.IsCancellationRequested)
+            {   
+                await Index(_cts.Token);                
+            }
+            
             _logger.Log(LogLevel.Information, $"Stopping");
             _cts.Cancel();
         }

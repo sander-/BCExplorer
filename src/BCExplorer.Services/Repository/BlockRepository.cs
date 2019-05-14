@@ -14,7 +14,7 @@ namespace BCExplorer.Services.Repository
 
     public class BlockRepository : IBlockRepository
     {
-        static Dictionary<string, Block> _blocks = new Dictionary<string, Block>();
+        static readonly Dictionary<string, Block> _blocks = new Dictionary<string, Block>();
 
         public Block GetById(string id)
         {

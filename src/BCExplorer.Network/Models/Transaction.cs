@@ -9,7 +9,7 @@ namespace BCExplorer.Network.Models
     {
         public Block Block { get; set; }
         public TransactionType TransactionType { get;  set; }
-        public object Blockhash { get;  set; }
+        public string Blockhash { get;  set; }
         public string TransactionId { get;  set; }
         public uint Size { get;  set; }
         public List<TransactionIn> TransactionsIn { get;  set; }

@@ -1,0 +1,58 @@
+﻿@model TransactionViewModel
+@{
+    ViewData["Title"] = "Transaction";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="input-group input-group-lg search-for">
+            <input onkeydown="if (event.keyCode == 13) window.open('/search/' + document.getElementById('search_id').value, '_self')" type="text" id="search_id" class="form-control" placeholder="You may search a block height, block hash, tx hash or address.">
+            <span class="input-group-btn">
+                <button class="btn btn-dark btn-lg" type="button" onclick="window.open('/search/' + document.getElementById('search_id').value, '_self')">Go!</button>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col">
+        <h1>Gravium Transaction</h1>
+        <small>@Model.Transaction.TransactionId</small>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Date/Time
+            </div>
+            <div class="card-body">
+                @Model.Transaction.Time
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Confirmations
+            </div>
+            <div class="card-body">
+                @Model.Transaction.Block.Confirmations
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Block
+            </div>
+            <div class="card-body">
+                @Model.Transaction.Block.Hash
+            </div>
+        </div>
+    </div>
+
+</div>
