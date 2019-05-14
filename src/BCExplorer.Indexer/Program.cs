@@ -56,8 +56,10 @@ namespace BCExplorer.Indexer
                 Password = config["password"]
             };
 
+            var options = new ApplicationSettings<RpcSettings>() { Value = settings };
+
             _client = new Client(settings, _logger);
-            _transactionProvider = new TransactionProvider(_client);
+            _transactionProvider = new TransactionProvider(options, _logger);
         }
 
         static async Task Main(string[] args)

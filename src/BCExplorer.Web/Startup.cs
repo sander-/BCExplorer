@@ -45,8 +45,7 @@ namespace BCExplorer.Web
             });
 
             services.AddOptions();
-
-            //services.Configure<RpcSettings>(Configuration.GetSection(nameof(RpcSettings)));
+                        
             services.Configure<RpcSettings>(options =>
             {
                 options.Url = Configuration["url"];

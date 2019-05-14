@@ -21,7 +21,6 @@ namespace BCExplorer.Services
 
     public class BlockService : IBlockService
     {
-
         public IBlockProvider BlockProvider { get; set; }
         public IBlockRepository BlockRepository { get; set; }
 
