@@ -68,6 +68,9 @@ namespace BCExplorer.Web
             services.AddTransient<ITransactionProvider, TransactionProvider>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
 
+            services.AddTransient<IAddressService, AddressService>();
+
+            services.AddTransient<ISearchService, SearchService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

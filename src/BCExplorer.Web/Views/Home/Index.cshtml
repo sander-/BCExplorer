@@ -3,16 +3,8 @@
     ViewData["Title"] = "Gravium Block Explorer";
 }
 
-<div class="row">
-    <div class="col">
-        <div class="input-group input-group-lg search-for">
-            <input onkeydown="if (event.keyCode == 13) window.open('/search/' + document.getElementById('search_id').value, '_self')" type="text" id="search_id" class="form-control" placeholder="You may search a block height, block hash, tx hash or address.">
-            <span class="input-group-btn">
-                <button class="btn btn-dark btn-lg" type="button" onclick="window.open('/search/' + document.getElementById('search_id').value, '_self')">Go!</button>
-            </span>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("_SearchPartial")
+
 <div class="row mt-3">
     <div class="col">
         <div class="card">
@@ -61,15 +53,15 @@
             </thead>
             <tbody>
                 @foreach (var block in Model.LatestBlocks)
-            {
-                <tr>
-                    <td>@block.Height</td>
-                    <td>@Math.Floor(block.Age.TotalMinutes) minutes @block.Age.Seconds seconds</td>
-                    <td>@block.Difficulty.ToString("F2")</td>
-                    <td>@block.TotalTransactions</td>
-                    <td>@block.Hash</td>
-                </tr>
-            }
+                {
+                    <tr>
+                        <td>@block.Height</td>
+                        <td>@Math.Floor(block.Age.TotalMinutes) minutes @block.Age.Seconds seconds</td>
+                        <td>@block.Difficulty.ToString("F2")</td>
+                        <td>@block.TotalTransactions</td>
+                        <td>@block.Hash</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

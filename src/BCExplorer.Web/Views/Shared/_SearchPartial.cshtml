@@ -1,0 +1,10 @@
+﻿<div class="row">
+    <div class="col">
+        <div class="input-group input-group-lg search-for">
+            <input onkeydown="if (event.keyCode == 13) window.open('/search/' + document.getElementById('search_id').value, '_self')" type="text" id="search_id" class="form-control" placeholder="You may search a block height, block hash, tx hash or address.">
+            <span class="input-group-btn">
+                <button class="btn btn-dark btn-lg" type="button" onclick="window.open('/search/' + document.getElementById('search_id').value, '_self')">Go!</button>
+            </span>
+        </div>
+    </div>
+</div>

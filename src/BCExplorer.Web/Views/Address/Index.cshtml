@@ -1,0 +1,85 @@
+﻿@model AddressViewModel
+@{
+    ViewData["Title"] = "Address";
+}
+
+@await Html.PartialAsync("_SearchPartial")
+
+<div class="row mt-2">
+    <div class="col">
+        <h1>Gravium Address</h1>
+        <small>@Model.Address.Id</small>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Balance
+                    </th>
+                    <th>
+                        Total received
+                    </th>
+                    <th>
+                        Total sent
+                    </th>
+                    <th>
+                        Total transactions
+                    </th>
+                    <th>
+                        Last modified in block
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Model.Address.Balance
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @Model.Address.TotalTransactions
+                    </td>
+                    <td>
+                        @Model.Address.LastModifiedBlockHeight
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col">
+        <h2>Transactions of address</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Hash</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Model.Address.Transactions)
+                {
+                    <tr>
+                        <td></td>
+                        <td>@transaction.TransactionId</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

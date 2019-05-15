@@ -1,14 +1,15 @@
-﻿@model TransactionViewModel
+﻿@model BlockViewModel
 @{
-    ViewData["Title"] = "Transaction";
+    ViewData["Title"] = "Block";
 }
 
 @await Html.PartialAsync("_SearchPartial")
 
-<div class="row">
+
+<div class="row mt-2">
     <div class="col">
-        <h1>Gravium Transaction</h1>
-        <small>@Model.Transaction.TransactionId</small>
+        <h1>Gravium Block @Model.Block.Height</h1>
+        <small>block hash: @Model.Block.Hash</small>
     </div>
 </div>
 
@@ -19,7 +20,17 @@
                 Date/Time
             </div>
             <div class="card-body">
-                @Model.Transaction.Time
+                @Model.Block.Time
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Difficulty
+            </div>
+            <div class="card-body">
+                @Model.Block.Difficulty
             </div>
         </div>
     </div>
@@ -29,20 +40,18 @@
                 Confirmations
             </div>
             <div class="card-body">
-                @Model.Transaction.Block.Confirmations
+                @Model.Block.Confirmations
             </div>
         </div>
     </div>
-
     <div class="col">
         <div class="card">
             <div class="card-header">
-                Block
+                Size (bytes)
             </div>
             <div class="card-body">
-                @Model.Transaction.Block.Hash
+                @Model.Block.Size
             </div>
         </div>
     </div>
-
 </div>
