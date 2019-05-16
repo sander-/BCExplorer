@@ -1,8 +1,10 @@
 ﻿using BCExplorer.Network.Models;
 using BCExplorer.Network.Providers;
 using BCExplorer.Services.Repository;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,12 +40,21 @@ namespace BCExplorer.Services
 
                 if (transaction == null)
                 {
+                    transaction = await GetTransactionFromDb(transactionId);
+
+                    if (transaction != null)
+                        TransactionRepository.AddTransaction(transactionId, transaction);
+                }
+
+                if (transaction == null)
+                {
                     transaction = await TransactionProvider.GetTransaction(transactionId);
                     transaction.Block = await BlockProvider.GetBlock(transaction.Blockhash);
 
                     if (transaction != null)
                     {
                         TransactionRepository.AddTransaction(transactionId, transaction);
+                        await StoreTransactionToDb(transaction);
                     }
                 }
             }
@@ -53,6 +64,40 @@ namespace BCExplorer.Services
             }
 
             return transaction;
+        }
+
+        private async Task<Transaction> GetTransactionFromDb(string transactionId)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var transactionFromDb = await context.Transactions.FindAsync(transactionId);
+                if (transactionFromDb == null)
+                    return null;
+
+                var transaction = JsonConvert.DeserializeObject<Transaction>(transactionFromDb.TransactionData);
+                return transaction;
+            }
+        }
+
+        private async Task StoreTransactionToDb(Transaction transaction)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var transactionFromDb = await context.Transactions.FindAsync(transaction.TransactionId);
+                var blockFromDb = context.Blocks.FirstOrDefault(p => p.Height == transaction.Block.Height);
+
+                if (transactionFromDb == null && blockFromDb != null)
+                {
+                    transactionFromDb = new Model.Transaction
+                    {
+                        TransactionData = JsonConvert.SerializeObject(transaction),
+                        Block = blockFromDb,
+                        Id = transaction.TransactionId
+                    };
+                    context.Transactions.Add(transactionFromDb);
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

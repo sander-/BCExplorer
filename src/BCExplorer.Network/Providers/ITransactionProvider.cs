@@ -9,6 +9,5 @@ namespace BCExplorer.Network.Providers
     public interface ITransactionProvider
     {
         Task<Transaction> GetTransaction(string id);
-        
     }
 }

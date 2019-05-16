@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BCExplorer.Services.Repository
 {
     public interface ITransactionRepository
     {
         Transaction GetById(string id);
-        void AddTransaction(string id, Transaction block);
+        void AddTransaction(string id, Transaction transaction);
     }
     public class TransactionRepository : ITransactionRepository
     {

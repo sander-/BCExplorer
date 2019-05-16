@@ -1,4 +1,5 @@
 ﻿using BCExplorer.Network.Models;
+using BCExplorer.Network.Providers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,13 @@ namespace BCExplorer.Services
     {
         readonly char[] CRLF = "\r\n".ToCharArray();
 
+        readonly ITransactionService _transactionService;
+
+        public AddressService(ITransactionService transactionService)
+        {
+            _transactionService = transactionService;
+        }
+
         public async Task<Address> GetAddress(string id)
         {
             using (var context = new Model.BCExplorerContext())
@@ -28,10 +36,7 @@ namespace BCExplorer.Services
 
                 foreach (var txid in txids)
                 {
-                    var transaction = new Transaction()
-                    {
-                        TransactionId = txid
-                    };
+                    var transaction = await _transactionService.GetTransaction(txid);                    
                     transactions.Add(transaction);
                 }
 

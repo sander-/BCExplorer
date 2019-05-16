@@ -39,8 +39,12 @@
                     <td>
                         @Model.Address.Balance
                     </td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        @Model.TotalReceived
+                    </td>
+                    <td>
+                        @Model.TotalSent
+                    </td>
                     <td>
                         @Model.Address.TotalTransactions
                     </td>
@@ -67,14 +71,25 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Address.Transactions)
+                @foreach (var atx in Model.AddressTransactions.OrderByDescending(p => p.Transaction.Time))
                 {
+                    var transactionType = atx.TotalOut > atx.TotalIn ? ">" : "<";
+                    var amountClass = (atx.TotalIn - atx.TotalOut) < 0 ? "alert-danger" : "alert-success";
                     <tr>
-                        <td></td>
-                        <td>@transaction.TransactionId</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>@atx.Transaction.Time</td>
+                        <td>@atx.Transaction.TransactionId</td>
+                        <td class="@amountClass">@(atx.TotalIn - atx.TotalOut)</td>
+                        <td>@atx.Balance</td>
+                        <td>
+                            @if (transactionType == ">")
+                            {
+                                <i title="Outgoing Transaction" class="fas fa-sign-out-alt"></i>
+                            }
+                            else
+                            {
+                                <i title="Incoming Transaction" class="fas fa-sign-in-alt"></i>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
