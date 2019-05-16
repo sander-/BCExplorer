@@ -2,6 +2,7 @@
 using BCExplorer.Network.Providers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace BCExplorer.Services
                 List<Transaction> transactions = new List<Transaction>();
                 string[] txids = addressFromDb.TxIdBlob.Split(CRLF, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var txid in txids)
+                foreach (var txid in txids.Distinct())
                 {
                     var transaction = await _transactionService.GetTransaction(txid);                    
                     transactions.Add(transaction);

@@ -201,47 +201,53 @@ namespace BCExplorer.Indexer
 
         static void ProcessPoWReward(Network.Models.Transaction tx, Model.BCExplorerContext context)
         {
-            var vout = tx.TransactionsOut[0];
-            var address = vout.Address;
-            var amount = vout.Value;
-            Model.Address existing = context.Addresses.Find(address);
-            if (existing == null)
+            foreach (var vout in tx.TransactionsOut)
             {
-                var newAddress = new Model.Address
+                //var vout = tx.TransactionsOut;
+                var address = vout.Address;
+                var amount = vout.Value;
+                Model.Address existing = context.Addresses.Find(address);
+                if (existing == null)
                 {
-                    Id = address,
-                    Balance = amount,
-                    LastModifiedBlockHeight = (int)tx.Block.Height,
-                    TxIdBlob = tx.TransactionId + CRLF
-                };
-                InsertAddressIfShouldBeIndexed(newAddress, context);
-                return;
+                    var newAddress = new Model.Address
+                    {
+                        Id = address,
+                        Balance = amount,
+                        LastModifiedBlockHeight = (int)tx.Block.Height,
+                        TxIdBlob = tx.TransactionId + CRLF
+                    };
+                    InsertAddressIfShouldBeIndexed(newAddress, context);
+                    return;
+                }
+                existing.Balance += amount;
+                existing.LastModifiedBlockHeight = (int)tx.Block.Height;
+                UpdateTxIdBlob(existing, tx.TransactionId);
             }
-            existing.Balance += amount;
-            existing.LastModifiedBlockHeight = (int)tx.Block.Height;
-            UpdateTxIdBlog(existing, tx.TransactionId);
         }
 
         static void ProcessStakingReward(Network.Models.Transaction tx, Model.BCExplorerContext context)
         {
-            var vin = tx.TransactionsIn[0];
-            var inAddress = vin.PrevVOutFetchedAddress;
-            var oldBalance = vin.PrevVOutFetchedValue;
-            
-            var outValue1 = tx.TransactionsOut[1].Value;
-            var outValue2 = tx.TransactionsOut[2].Value;
-            var change = outValue1 + outValue2 - oldBalance;
-
-            // we can assume that only pre-existing addresses get a staking reward
-            Model.Address existing = context.Addresses.Find(inAddress);
-            if(existing == null)
+            foreach (var vin in tx.TransactionsIn)
             {
-                _logger.LogError($"{vin.PrevVOutFetchedAddress} could not be found.");
-            }
-            
-            existing.Balance += change;
-            existing.LastModifiedBlockHeight = (int)tx.Block.Height;
-            UpdateTxIdBlog(existing, tx.TransactionId);
+                //var vin = tx.TransactionsIn[0];
+                var inAddress = vin.PrevVOutFetchedAddress;
+                var oldBalance = vin.PrevVOutFetchedValue;
+
+                var outValue1 = tx.TransactionsOut[1].Value;
+                var outValue2 = tx.TransactionsOut[2].Value;
+                var change = outValue1 + outValue2 - oldBalance;
+
+                // we can assume that only pre-existing addresses get a staking reward
+                Model.Address existing = context.Addresses.Find(inAddress);
+                if (existing == null)
+                {
+                    _logger.LogError($"{vin.PrevVOutFetchedAddress} could not be found.");
+                }
+
+                existing.Balance += change;
+                existing.LastModifiedBlockHeight = (int)tx.Block.Height;
+                UpdateTxIdBlob(existing, tx.TransactionId);
+            }            
         }
 
         private static void ProcessMoneyTransfer(Network.Models.Transaction tx, Model.BCExplorerContext context)
@@ -261,7 +267,7 @@ namespace BCExplorer.Indexer
                 inAdresses.Add(existing.Id);
                 existing.Balance -= vin.PrevVOutFetchedValue;
                 existing.LastModifiedBlockHeight = (int)tx.Block.Height;
-                UpdateTxIdBlog(existing, tx.TransactionId);
+                UpdateTxIdBlob(existing, tx.TransactionId);
             }
             IList<Network.Models.Transaction.TransactionOut> vouts = tx.TransactionsOut;
             foreach (var vout in vouts)
@@ -276,7 +282,7 @@ namespace BCExplorer.Indexer
                     existing.Balance += vout.Value;
                     if (!inAdresses.Contains(existing.Id))
                     {
-                        UpdateTxIdBlog(existing, tx.TransactionId);
+                        UpdateTxIdBlob(existing, tx.TransactionId);
                         existing.LastModifiedBlockHeight = (int)tx.Block.Height;
                     }
                 }
@@ -294,15 +300,14 @@ namespace BCExplorer.Indexer
             }
         }
 
-        private static void UpdateTxIdBlog(Model.Address existing, string transactionId)
+        private static void UpdateTxIdBlob(Model.Address existing, string transactionId)
         {
             // the last txid is first in the blob
-            var oldTxIds = existing.TxIdBlob.Split(CRLF, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var txIds = existing.TxIdBlob.Split(CRLF, StringSplitOptions.RemoveEmptyEntries).ToList();
             // append at pos 0
-            oldTxIds.Insert(0, transactionId);
-            var max250txids = oldTxIds.Take(250).ToArray();
+            txIds.Insert(0, transactionId);            
             var sb = new StringBuilder();
-            foreach (var txid in max250txids)
+            foreach (var txid in txIds.Distinct())
                 sb.Append(txid + CRLF);
             existing.TxIdBlob = sb.ToString();
         }

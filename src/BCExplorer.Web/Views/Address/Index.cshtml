@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var atx in Model.AddressTransactions.OrderByDescending(p => p.Transaction.Time))
+                @foreach (var atx in Model.AddressTransactions.Reverse())
                 {
                     var transactionType = atx.TotalOut > atx.TotalIn ? ">" : "<";
                     var amountClass = (atx.TotalIn - atx.TotalOut) < 0 ? "alert-danger" : "alert-success";

@@ -107,7 +107,6 @@ namespace BCExplorer.Network
                         {
                             vOut.Address = script.ToString();
                         }
-
                     }
                     else
                     {
@@ -120,18 +119,17 @@ namespace BCExplorer.Network
             return transaction;
         }
 
-
         static TransactionType GetTransactionType(RawTransactionResult tx)
         {
-            if (tx.Input[0].Coinbase != null)
-                return TransactionType.PoW_Reward_Coinbase;
-
             var vout_0 = tx.Output[0];
             if (tx.Output.Count == 3
                 && vout_0.Index == 0
                 && vout_0.ScriptPubKey.Type == NON_STANDARD
                 && string.IsNullOrEmpty(vout_0.ScriptPubKey.Hex))
                 return TransactionType.PoS_Reward;
+
+            if (tx.Input[0].Coinbase != null)
+                return TransactionType.PoW_Reward_Coinbase;
 
             return TransactionType.Money;
         }

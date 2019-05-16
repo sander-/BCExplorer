@@ -9,6 +9,7 @@ namespace BCExplorer.Network.Models
         Unknown = 0,
         PoW_Reward_Coinbase = 1,
         PoS_Reward = 2,
-        Money = 3
+        MN_Reward = 3,
+        Money = 4
     }
 }
