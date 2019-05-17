@@ -61,6 +61,7 @@ namespace BCExplorer.Network
                 NextBlock = blockResult.Nextblockhash,
                 Confirmations = blockResult.Confirmations,
                 TotalTransactions = blockResult.Transactions.Count,
+                TransactionIds = blockResult.Transactions,
                 Transactions = new List<Transaction>(blockResult.Transactions.Count),
                 Chainwork = blockResult.Chainwork,
                 Bits = blockResult.Bits,
@@ -71,6 +72,7 @@ namespace BCExplorer.Network
                 //Weight = blockResult.Weight
 
             };
+            
             return block;
         }
     }

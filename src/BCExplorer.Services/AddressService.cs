@@ -47,7 +47,7 @@ namespace BCExplorer.Services
                     Balance = addressFromDb.Balance,
                     LastModifiedBlockHeight = addressFromDb.LastModifiedBlockHeight,
                     TransactionIds = txids,
-                    TotalTransactions = txids.Length,
+                    TotalTransactions = txids.Distinct().Count(),
                     Transactions = transactions
                 };
                 return address;

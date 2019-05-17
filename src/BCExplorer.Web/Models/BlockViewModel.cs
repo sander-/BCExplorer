@@ -13,5 +13,10 @@ namespace BCExplorer.Web.Models
         public int CurrentPage { get; set; }
         public int OffSet { get; set; }
         public int Max { get; set; }
+
+        public void CalculateTotals()
+        {
+
+        }
     }
 }

@@ -55,3 +55,73 @@
         </div>
     </div>
 </div>
+
+<div class="row mt-2">
+    <div class="col">
+        <h2>Transactions count: @Model.Block.TotalTransactions</h2>
+    </div>
+</div>
+
+@foreach (var tx in Model.Block.Transactions)
+{
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <h5>@tx.TransactionId</h5>
+        </div>
+        <div class="col">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col tx-input">
+                            <table class="table table-bordered bg-white">
+
+                                @if (tx.TransactionType == BCExplorer.Network.Models.TransactionType.PoW_Reward_Coinbase)
+                                {
+                                    <tr>
+                                        <td>Reward &amp; Fees</td>
+                                        <td>@tx.TotalOut</td>
+                                    </tr>
+                                }
+                                @if (tx.TransactionType == BCExplorer.Network.Models.TransactionType.Money)
+                                {
+                                    foreach (var txin in tx.TransactionsIn)
+                                    {
+                                        <tr>
+                                            <td>@txin.PrevVOutFetchedAddress</td>
+                                            <td>@txin.PrevVOutFetchedValue</td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                        <div class="col tx-output">
+                            <table class="table table-bordered bg-white">
+                                @{
+                                    decimal amountTotal = 0;
+                                }
+                                @foreach (var txout in tx.TransactionsOut)
+                                {
+                                    amountTotal += txout.Value;
+                                    <tr>
+                                        <td>@txout.Address</td>
+                                        <td>@txout.Value</td>
+                                    </tr>
+                                }
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2" class="text-right">
+                                            <strong>@amountTotal</strong>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

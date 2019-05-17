@@ -10,11 +10,14 @@ namespace BCExplorer.Services.Repository
     {
         Block GetById(string id);
         void AddBlock(string id, Block block);
+        Block GetByIdWithTransactions(string id);
+        void AddBlockWithTransactions(string id, Block block);
     }
 
     public class BlockRepository : IBlockRepository
     {
         static readonly Dictionary<string, Block> _blocks = new Dictionary<string, Block>();
+        static readonly Dictionary<string, Block> _blocksWithTransactions = new Dictionary<string, Block>();
 
         public Block GetById(string id)
         {
@@ -23,6 +26,14 @@ namespace BCExplorer.Services.Repository
         public void AddBlock(string id, Block block)
         {
             if (!_blocks.ContainsKey(id)) _blocks.Add(id, block);
+        }
+        public Block GetByIdWithTransactions(string id)
+        {
+            return _blocksWithTransactions.ContainsKey(id) ? _blocks[id] : null;
+        }
+        public void AddBlockWithTransactions(string id, Block block)
+        {
+            if (!_blocksWithTransactions.ContainsKey(id)) _blocks.Add(id, block);
         }
     }
 }

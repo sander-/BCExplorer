@@ -22,7 +22,7 @@ namespace BCExplorer.Web.Controllers
         [Route("block/{id}")]
         public async Task<IActionResult> Index(string id, int page = 0)
         {
-            var block = await BlockService.GetBlock(id);
+            var block = await BlockService.GetBlockWithTransactions(id);
             if (block == null)
             {
                 return View("_NotFound");

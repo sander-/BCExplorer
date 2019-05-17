@@ -15,6 +15,7 @@ namespace BCExplorer.Services
     public interface IBlockService
     {
         Task<Block> GetBlock(string id);
+        Task<Block> GetBlockWithTransactions(string id);
         Task<Block> GetLastBlock();
         Task<List<Block>> GetLatestBlocks(int count);
     }
@@ -24,11 +25,16 @@ namespace BCExplorer.Services
         public IBlockProvider BlockProvider { get; set; }
         public IBlockRepository BlockRepository { get; set; }
 
+        readonly ITransactionService _transactionService;
+
         public BlockService(IBlockProvider blockProvider,
-            IBlockRepository blockRepository)
+            IBlockRepository blockRepository,
+            ITransactionService transactionService
+            )
         {
             BlockProvider = blockProvider;
             BlockRepository = blockRepository;
+            _transactionService = transactionService;
         }
 
         public async Task<Block> GetBlock(string id)
@@ -56,6 +62,38 @@ namespace BCExplorer.Services
 
             return block;
         }
+
+        public async Task<Block> GetBlockWithTransactions(string id)
+        {
+            Block block;
+
+            try
+            {
+                block = BlockRepository.GetById(id);
+
+                if (block == null)
+                {
+                    block = await BlockProvider.GetBlock(id);
+
+                    if (block != null)
+                    {
+                        foreach (var txid in block.TransactionIds)
+                        {
+                            var transaction = await _transactionService.GetTransaction(txid);
+                            block.Transactions.Add(transaction);
+                        }
+                        BlockRepository.AddBlockWithTransactions(id, block);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return block;
+        }
+
 
         public async Task<Block> GetLastBlock()
         {
