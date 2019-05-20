@@ -29,11 +29,11 @@ namespace BCExplorer.Services.Repository
         }
         public Block GetByIdWithTransactions(string id)
         {
-            return _blocksWithTransactions.ContainsKey(id) ? _blocks[id] : null;
+            return _blocksWithTransactions.ContainsKey(id) ? _blocksWithTransactions[id] : null;
         }
         public void AddBlockWithTransactions(string id, Block block)
         {
-            if (!_blocksWithTransactions.ContainsKey(id)) _blocks.Add(id, block);
+            if (!_blocksWithTransactions.ContainsKey(id)) _blocksWithTransactions.Add(id, block);
         }
     }
 }

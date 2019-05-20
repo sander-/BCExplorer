@@ -72,7 +72,7 @@
             <div class="card bg-light">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col tx-input">
+                        <div class="col tx-input small">
                             <table class="table table-bordered bg-white">
 
                                 @if (tx.TransactionType == BCExplorer.Network.Models.TransactionType.PoW_Reward_Coinbase)
@@ -88,7 +88,7 @@
                                     {
                                         <tr>
                                             <td>@txin.PrevVOutFetchedAddress</td>
-                                            <td>@txin.PrevVOutFetchedValue</td>
+                                            <td class="text-right">@txin.PrevVOutFetchedValue</td>
                                         </tr>
                                     }
                                 }
@@ -97,7 +97,7 @@
                         <div class="col-md-1">
                             <i class="fa fa-arrow-right"></i>
                         </div>
-                        <div class="col tx-output">
+                        <div class="col tx-output small">
                             <table class="table table-bordered bg-white">
                                 @{
                                     decimal amountTotal = 0;
@@ -107,7 +107,7 @@
                                     amountTotal += txout.Value;
                                     <tr>
                                         <td>@txout.Address</td>
-                                        <td>@txout.Value</td>
+                                        <td class="text-right">@txout.Value</td>
                                     </tr>
                                 }
                                 <tfoot>

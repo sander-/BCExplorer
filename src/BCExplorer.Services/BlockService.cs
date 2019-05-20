@@ -69,7 +69,7 @@ namespace BCExplorer.Services
 
             try
             {
-                block = BlockRepository.GetById(id);
+                block = BlockRepository.GetByIdWithTransactions(id);
 
                 if (block == null)
                 {
