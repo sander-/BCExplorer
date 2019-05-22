@@ -73,7 +73,7 @@
             <tbody>
                 @foreach (var atx in Model.Address.Transactions.Reverse())
                 {
-                    var transactionType = atx.Amount > 0 ? ">" : "<";
+                    var transactionType = atx.Amount < 0 ? ">" : "<";
                     var amountClass = atx.Amount < 0 ? "alert-danger" : "alert-success";
                     <tr>
                         <td>@atx.Time</td>

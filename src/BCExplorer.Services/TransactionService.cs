@@ -107,7 +107,7 @@ namespace BCExplorer.Services
             {
                 var addressTransactions = new List<AddressTransaction>();
                 var transactionsFromDb =
-                    context.AddressTransactions.Where(p => p.Address.Id == addressId);
+                    context.AddressTransactions.Where(p => p.Address.Id == addressId).OrderBy(p => p.TimeStamp).ThenByDescending(p => p.Balance);
 
                 foreach (var tx in transactionsFromDb)
                 {

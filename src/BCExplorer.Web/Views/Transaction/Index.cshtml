@@ -44,5 +44,71 @@
             </div>
         </div>
     </div>
+</div>
 
+<div class="row mt-2">    
+    <div class="col">
+        <div class="card bg-light">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h5>
+                            @Model.Transaction.TransactionId
+                        </h5>
+                    </div>
+                    <div class="col tx-input small">
+                        <table class="table table-bordered bg-white">
+
+                            @if (Model.Transaction.TransactionType == BCExplorer.Network.Models.TransactionType.PoW_Reward_Coinbase)
+                            {
+                                <tr>
+                                    <td>Reward &amp; Fees</td>
+                                    <td>@Model.Transaction.TotalOut</td>
+                                </tr>
+                            }
+                            @if (Model.Transaction.TransactionType == BCExplorer.Network.Models.TransactionType.Money)
+                            {
+                                foreach (var txin in Model.Transaction.TransactionsIn)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.ActionLink(txin.PrevVOutFetchedAddress, "Index", "Address", new { id = txin.PrevVOutFetchedAddress })
+                                        </td>
+                                        <td class="text-right">@txin.PrevVOutFetchedValue</td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                    <div class="col-md-1">
+                        <i class="fa fa-arrow-right"></i>
+                    </div>
+                    <div class="col tx-output small">
+                        <table class="table table-bordered bg-white">
+                            @{
+                                decimal amountTotal = 0;
+                            }
+                            @foreach (var txout in Model.Transaction.TransactionsOut)
+                            {
+                                amountTotal += txout.Value;
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(txout.Address, "Index", "Address", new { id = txout.Address })
+                                    </td>
+                                    <td class="text-right">@txout.Value</td>
+                                </tr>
+                            }
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" class="text-right">
+                                        <strong>@amountTotal</strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
