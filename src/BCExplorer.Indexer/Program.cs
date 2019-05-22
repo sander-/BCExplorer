@@ -66,11 +66,11 @@ namespace BCExplorer.Indexer
         {
             _logger.Log(LogLevel.Information, "Indexer Starting...press CTRL-C to cancel.");
 
-            while(!_cts.Token.IsCancellationRequested)
-            {   
-                await Index(_cts.Token);                
+            while (!_cts.Token.IsCancellationRequested)
+            {
+                await Index(_cts.Token);
             }
-            
+
             _logger.Log(LogLevel.Information, $"Stopping");
             _cts.Cancel();
         }
@@ -214,14 +214,14 @@ namespace BCExplorer.Indexer
                         Id = address,
                         Balance = amount,
                         LastModifiedBlockHeight = (int)tx.Block.Height,
-                        TxIdBlob = tx.TransactionId + CRLF
                     };
                     InsertAddressIfShouldBeIndexed(newAddress, context);
+                    UpdateTxIdBlob(newAddress, tx.TransactionId, tx.Time, newAddress.Balance, amount, context);
                     return;
                 }
                 existing.Balance += amount;
                 existing.LastModifiedBlockHeight = (int)tx.Block.Height;
-                UpdateTxIdBlob(existing, tx.TransactionId);
+                UpdateTxIdBlob(existing, tx.TransactionId, tx.Time, existing.Balance, amount, context);
             }
         }
 
@@ -246,11 +246,12 @@ namespace BCExplorer.Indexer
 
                 existing.Balance += change;
                 existing.LastModifiedBlockHeight = (int)tx.Block.Height;
-                UpdateTxIdBlob(existing, tx.TransactionId);
-            }            
+                UpdateTxIdBlob(existing, tx.TransactionId, tx.Time, existing.Balance, change, context);
+            }
         }
 
-        private static void ProcessMoneyTransfer(Network.Models.Transaction tx, Model.BCExplorerContext context)
+        private static void ProcessMoneyTransfer(Network.Models.Transaction tx,
+            Model.BCExplorerContext context)
         {
             List<Network.Models.Transaction.TransactionIn> vins = tx.TransactionsIn;
             List<string> inAdresses = new List<string>();
@@ -258,16 +259,16 @@ namespace BCExplorer.Indexer
             {
                 Model.Address existing = context.Addresses.Find(vin.PrevVOutFetchedAddress);
 
-                if (existing == null) 
+                if (existing == null)
                 {
-                    _logger.LogWarning($"{vin.PrevVOutFetchedAddress} could not be found.");                    
+                    _logger.LogWarning($"{vin.PrevVOutFetchedAddress} could not be found.");
                     continue;
                 }
 
                 inAdresses.Add(existing.Id);
                 existing.Balance -= vin.PrevVOutFetchedValue;
                 existing.LastModifiedBlockHeight = (int)tx.Block.Height;
-                UpdateTxIdBlob(existing, tx.TransactionId);
+                UpdateTxIdBlob(existing, tx.TransactionId, tx.Time, existing.Balance, -vin.PrevVOutFetchedValue, context);
             }
             IList<Network.Models.Transaction.TransactionOut> vouts = tx.TransactionsOut;
             foreach (var vout in vouts)
@@ -282,7 +283,7 @@ namespace BCExplorer.Indexer
                     existing.Balance += vout.Value;
                     if (!inAdresses.Contains(existing.Id))
                     {
-                        UpdateTxIdBlob(existing, tx.TransactionId);
+                        UpdateTxIdBlob(existing, tx.TransactionId, tx.Time, existing.Balance, vout.Value, context);
                         existing.LastModifiedBlockHeight = (int)tx.Block.Height;
                     }
                 }
@@ -292,24 +293,43 @@ namespace BCExplorer.Indexer
                     {
                         Id = vout.Address,
                         Balance = vout.Value,
-                        LastModifiedBlockHeight = (int)tx.Block.Height,
-                        TxIdBlob = tx.TransactionId + CRLF
+                        LastModifiedBlockHeight = (int)tx.Block.Height
                     };
                     InsertAddressIfShouldBeIndexed(newAddress, context);
+                    UpdateTxIdBlob(newAddress, tx.TransactionId, tx.Time, newAddress.Balance, vout.Value, context);
                 }
             }
         }
 
-        private static void UpdateTxIdBlob(Model.Address existing, string transactionId)
+        private static void UpdateTxIdBlob_Obsolete(Model.Address existing,
+            string transactionId)
         {
             // the last txid is first in the blob
             var txIds = existing.TxIdBlob.Split(CRLF, StringSplitOptions.RemoveEmptyEntries).ToList();
             // append at pos 0
-            txIds.Insert(0, transactionId);            
+            txIds.Insert(0, transactionId);
             var sb = new StringBuilder();
             foreach (var txid in txIds.Distinct())
                 sb.Append(txid + CRLF);
             existing.TxIdBlob = sb.ToString();
+        }
+
+        private static void UpdateTxIdBlob(Model.Address existing, string transactionId,
+            DateTime time,
+            decimal balance,
+            decimal amount,
+            Model.BCExplorerContext context)
+        {
+            var at = new Model.AddressTransaction()
+            {
+                Address = existing,
+                TimeStamp = time,
+                Balance = balance,
+                Amount = amount,
+                TransactionId = transactionId
+            };
+
+            context.AddressTransactions.Add(at);
         }
 
         static void InsertAddressIfShouldBeIndexed(Model.Address address, Model.BCExplorerContext context)

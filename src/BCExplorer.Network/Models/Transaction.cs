@@ -14,7 +14,7 @@ namespace BCExplorer.Network.Models
         public uint Size { get;  set; }
         public List<TransactionIn> TransactionsIn { get;  set; }
         public List<TransactionOut> TransactionsOut { get;  set; }
-        public object Time { get;  set; }        
+        public DateTime Time { get;  set; }        
 
         public decimal TotalOut
         {

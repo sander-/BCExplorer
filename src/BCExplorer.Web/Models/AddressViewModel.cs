@@ -16,40 +16,13 @@ namespace BCExplorer.Web.Models
 
         public decimal TotalReceived { get; set; }
         public decimal TotalSent { get; set; }
-        public IList<Transaction> Transactions { get; set; }
-        public IList<AddressTransaction> AddressTransactions { get; set; }
-
-        public class AddressTransaction
-        {
-            public Transaction Transaction { get; set; }
-            public Address Address { get; set; }
-            public decimal TotalIn { get; set; }
-            public decimal TotalOut { get; set; }
-            public decimal Balance { get; set; }
-        }
 
         public void CalculateTotals()
         {
-            AddressTransactions = new List<AddressTransaction>();
-
-            decimal balance = 0;
-
-            foreach (var tx in Address.Transactions.OrderBy(p => p.Time))
+            foreach (var tx in Address.Transactions)
             {
-                var addressTx = new AddressTransaction()
-                {
-                    TotalIn = tx.TransactionsOut.Where(p => p.Address == Address.Id).Sum(x => x.Value),
-                    TotalOut = tx.TransactionsIn.Where(p => p.PrevVOutFetchedAddress == Address.Id).Sum(x => x.PrevVOutFetchedValue),
-                    Address = Address,
-                    Transaction = tx
-                };
-
-                var amount = addressTx.TotalIn - addressTx.TotalOut;
-                balance += amount;
-                addressTx.Balance = balance;
-                TotalReceived += addressTx.TotalIn;
-                TotalSent += addressTx.TotalOut;
-                AddressTransactions.Add(addressTx);
+                if (tx.Amount > 0) TotalReceived += tx.Amount;
+                if (tx.Amount < 0) TotalSent += tx.Amount;
             }
         }
     }

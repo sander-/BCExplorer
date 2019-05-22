@@ -59,7 +59,9 @@
                         <td>@Math.Floor(block.Age.TotalMinutes) minutes @block.Age.Seconds seconds</td>
                         <td>@block.Difficulty.ToString("F2")</td>
                         <td>@block.TotalTransactions</td>
-                        <td>@block.Hash</td>
+                        <td>
+                            @Html.ActionLink(block.Hash, "Index", "Block", new { id = block.Hash })
+                        </td>
                     </tr>
                 }
             </tbody>

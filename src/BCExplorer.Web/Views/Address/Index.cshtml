@@ -71,14 +71,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var atx in Model.AddressTransactions.Reverse())
+                @foreach (var atx in Model.Address.Transactions.Reverse())
                 {
-                    var transactionType = atx.TotalOut > atx.TotalIn ? ">" : "<";
-                    var amountClass = (atx.TotalIn - atx.TotalOut) < 0 ? "alert-danger" : "alert-success";
+                    var transactionType = atx.Amount > 0 ? ">" : "<";
+                    var amountClass = atx.Amount < 0 ? "alert-danger" : "alert-success";
                     <tr>
-                        <td>@atx.Transaction.Time</td>
-                        <td>@atx.Transaction.TransactionId</td>
-                        <td class="@amountClass">@(atx.TotalIn - atx.TotalOut)</td>
+                        <td>@atx.Time</td>
+                        <td>
+                            @Html.ActionLink(atx.TransactionId, "Index", "Transaction", new { id = atx.TransactionId })
+                        </td>
+                        <td class="@amountClass">@(atx.Amount)</td>
                         <td>@atx.Balance</td>
                         <td>
                             @if (transactionType == ">")

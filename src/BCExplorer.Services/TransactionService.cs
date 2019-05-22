@@ -13,7 +13,9 @@ namespace BCExplorer.Services
     public interface ITransactionService
     {
         Task<Transaction> GetTransaction(string transactionId);
+        IList<AddressTransaction> GetTransactionsForAddress(string addressId);
     }
+
     public class TransactionService : ITransactionService
     {
         public ITransactionProvider TransactionProvider { get; set; }
@@ -97,6 +99,30 @@ namespace BCExplorer.Services
                     context.Transactions.Add(transactionFromDb);
                     context.SaveChanges();
                 }
+            }
+        }
+        public IList<AddressTransaction> GetTransactionsForAddress(string addressId)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var addressTransactions = new List<AddressTransaction>();
+                var transactionsFromDb =
+                    context.AddressTransactions.Where(p => p.Address.Id == addressId);
+
+                foreach (var tx in transactionsFromDb)
+                {
+                    var at = new AddressTransaction
+                    {
+                        AddressId = addressId,
+                        Amount = tx.Amount,
+                        Balance = tx.Balance,
+                        TransactionId = tx.TransactionId,
+                        Time = tx.TimeStamp
+                    };
+                    addressTransactions.Add(at);
+                }
+
+                return addressTransactions;
             }
         }
     }

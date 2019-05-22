@@ -66,7 +66,9 @@
 {
     <div class="row mt-2">
         <div class="col-md-12">
-            <h5>@tx.TransactionId</h5>
+            <h5>
+                @Html.ActionLink(tx.TransactionId, "Index", "Transaction", new { id = tx.TransactionId })
+            </h5>
         </div>
         <div class="col">
             <div class="card bg-light">
@@ -87,7 +89,9 @@
                                     foreach (var txin in tx.TransactionsIn)
                                     {
                                         <tr>
-                                            <td>@txin.PrevVOutFetchedAddress</td>
+                                            <td>
+                                                @Html.ActionLink(txin.PrevVOutFetchedAddress, "Index", "Address", new { id = txin.PrevVOutFetchedAddress })
+                                            </td>
                                             <td class="text-right">@txin.PrevVOutFetchedValue</td>
                                         </tr>
                                     }
@@ -106,7 +110,9 @@
                                 {
                                     amountTotal += txout.Value;
                                     <tr>
-                                        <td>@txout.Address</td>
+                                        <td>
+                                            @Html.ActionLink(txout.Address, "Index", "Address", new { id = txout.Address })
+                                        </td>
                                         <td class="text-right">@txout.Value</td>
                                     </tr>
                                 }

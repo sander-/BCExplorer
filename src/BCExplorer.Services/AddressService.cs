@@ -33,22 +33,23 @@ namespace BCExplorer.Services
                     return null;
 
                 List<Transaction> transactions = new List<Transaction>();
-                string[] txids = addressFromDb.TxIdBlob.Split(CRLF, StringSplitOptions.RemoveEmptyEntries);
+                var addressTransactions = _transactionService.GetTransactionsForAddress(id);
 
-                foreach (var txid in txids.Distinct())
-                {
-                    var transaction = await _transactionService.GetTransaction(txid);                    
-                    transactions.Add(transaction);
-                }
+                //string[] txids = addressFromDb.TxIdBlob.Split(CRLF, StringSplitOptions.RemoveEmptyEntries);
+
+                //foreach (var txid in txids.Distinct())
+                //{
+                //    var transaction = await _transactionService.GetTransaction(txid);                    
+                //    transactions.Add(transaction);
+                //}
 
                 var address = new Address()
                 {
                     Id = id,
                     Balance = addressFromDb.Balance,
                     LastModifiedBlockHeight = addressFromDb.LastModifiedBlockHeight,
-                    TransactionIds = txids,
-                    TotalTransactions = txids.Distinct().Count(),
-                    Transactions = transactions
+                    Transactions = addressTransactions,
+                    TotalTransactions = addressTransactions.Count,
                 };
                 return address;
             }

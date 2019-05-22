@@ -49,7 +49,9 @@ namespace BCExplorer.Web.Controllers
                 OffSet = offset,
                 Max = max
             };
+
             viewModel.CalculateTotals();
+            
             return View(viewModel);
         }
     }

@@ -4,14 +4,16 @@ using BCExplorer.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BCExplorer.Model.Migrations
 {
     [DbContext(typeof(BCExplorerContext))]
-    partial class BCExplorerContextModelSnapshot : ModelSnapshot
+    [Migration("20190521151234_address_transactions")]
+    partial class address_transactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

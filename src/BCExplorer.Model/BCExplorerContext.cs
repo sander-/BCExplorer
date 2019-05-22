@@ -14,6 +14,7 @@ namespace BCExplorer.Model
         public DbSet<Block> Blocks { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<AddressTransaction> AddressTransactions { get; set; }
 
         public BCExplorerContext()
         { }
