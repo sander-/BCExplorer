@@ -14,6 +14,10 @@ namespace BCExplorer.Services
     {
         Task<Transaction> GetTransaction(string transactionId);
         IList<AddressTransaction> GetTransactionsForAddress(string addressId);
+        IList<AddressTransaction> GetTransactionsForAddress(string addressId, int page, int itemsOnPage);
+        int GetTransactionCountForAddress(string addressId);
+        decimal GetTotalSent(string addressId);
+        decimal GetTotalReceived(string addressId);
     }
 
     public class TransactionService : ITransactionService
@@ -123,6 +127,69 @@ namespace BCExplorer.Services
                 }
 
                 return addressTransactions;
+            }
+        }
+
+        public IList<AddressTransaction> GetTransactionsForAddress(string addressId, int page, int itemsOnPage)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var addressTransactions = new List<AddressTransaction>();
+                var transactionsFromDb =
+                    context.AddressTransactions
+                        .Where(p => p.Address.Id == addressId)
+                        .OrderByDescending(p => p.TimeStamp)
+                        .ThenByDescending(p => p.Balance)
+                        .Skip((page-1) * itemsOnPage)
+                        .Take(itemsOnPage);
+
+                foreach (var tx in transactionsFromDb)
+                {
+                    var at = new AddressTransaction
+                    {
+                        AddressId = addressId,
+                        Amount = tx.Amount,
+                        Balance = tx.Balance,
+                        TransactionId = tx.TransactionId,
+                        Time = tx.TimeStamp
+                    };
+                    addressTransactions.Add(at);
+                }
+
+                return addressTransactions;
+            }
+        }
+        public int GetTransactionCountForAddress(string addressId)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var transactionsFromDb =
+                    context.AddressTransactions
+                        .Where(p => p.Address.Id == addressId);
+                return transactionsFromDb.Count();
+            }
+        }
+
+        public decimal GetTotalSent(string addressId)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var transactionsFromDb =
+                    context.AddressTransactions
+                        .Where(p => p.Address.Id == addressId)
+                        .Where(a => a.Amount < 0);
+                return transactionsFromDb.Sum(p => p.Amount);
+            }
+        }
+        public decimal GetTotalReceived(string addressId)
+        {
+            using (var context = new Model.BCExplorerContext())
+            {
+                var transactionsFromDb =
+                    context.AddressTransactions
+                        .Where(p => p.Address.Id == addressId)
+                        .Where(a => a.Amount > 0);
+                return transactionsFromDb.Sum(p => p.Amount);
             }
         }
     }

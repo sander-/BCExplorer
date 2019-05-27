@@ -11,5 +11,7 @@ namespace BCExplorer.Network.Models
         public int LastModifiedBlockHeight { get; set; }
         public int TotalTransactions { get; set; }        
         public IList<AddressTransaction> Transactions { get; set; }
+        public decimal TotalReceived { get; set; }
+        public decimal TotalSent { get; set; }
     }
 }

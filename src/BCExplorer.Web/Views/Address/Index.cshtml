@@ -60,7 +60,7 @@
     <div class="col">
         <h2>Transactions of address</h2>
 
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Timestamp</th>
@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var atx in Model.Address.Transactions.Reverse())
+                @foreach (var atx in Model.Address.Transactions)
                 {
                     var transactionType = atx.Amount < 0 ? ">" : "<";
                     var amountClass = atx.Amount < 0 ? "alert-danger" : "alert-success";
@@ -97,6 +97,33 @@
             </tbody>
         </table>
 
-    </div>
+        <nav id="pages">
 
+        </nav>
+
+
+    </div>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+                $('#pages').bootpag({
+                total: @Model.PageCount,
+                page: @Model.CurrentPage,
+                href: "?page={{number}}",
+                maxVisible: 8,
+                leaps: true,
+                firstLastUse: true,
+                first: '←',
+                last: '→',
+                wrapClass: 'pagination justify-content-center',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
+                });
+    </script>
+}

@@ -22,36 +22,24 @@ namespace BCExplorer.Web.Controllers
         }
 
         [Route("address/{id}")]
-        public async Task<IActionResult> Index(string id, int page)
+        public async Task<IActionResult> Index(string id, int page = 1)
         {
-            var address = await AddressService.GetAddress(id);
+            var address = await AddressService.GetAddress(id, page, ItemsOnPage);
 
             if (address == null)
                 return View("_NotFound");
 
-            var offset = ItemsOnPage * page;
-                        
-            int max;
-            if (offset < address.TotalTransactions && offset + ItemsOnPage < address.TotalTransactions)
-            {
-                max = offset + ItemsOnPage;
-            }
-            else
-            {
-                max = address.TotalTransactions;
-            }
+            var pageCount = (int)Math.Ceiling((decimal)address.TotalTransactions / ItemsOnPage);
 
             var viewModel = new AddressViewModel()
             {
                 Address = address,
-                Count = (int)Math.Ceiling((decimal)address.TotalTransactions / ItemsOnPage),
                 CurrentPage = page,
-                OffSet = offset,
-                Max = max
+                PageCount = pageCount,
+                TotalReceived = address.TotalReceived,
+                TotalSent = address.TotalSent,
             };
 
-            viewModel.CalculateTotals();
-            
             return View(viewModel);
         }
     }
