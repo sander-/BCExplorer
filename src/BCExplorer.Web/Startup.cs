@@ -28,6 +28,7 @@ namespace BCExplorer.Web
                  .Build();
 
             var cultureInfo = new CultureInfo("en-US");
+
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
