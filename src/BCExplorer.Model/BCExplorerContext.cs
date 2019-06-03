@@ -38,7 +38,9 @@ namespace BCExplorer.Model
                     _connectionString = File.ReadAllText(pathForEfTools).Trim();
                 }
             }
-            optionsBuilder.UseSqlServer(_connectionString);
+
+            // Use UseRowNumberForPaging when using SQL Server 2008 R2 
+            optionsBuilder.UseSqlServer(_connectionString, o => o.UseRowNumberForPaging());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
